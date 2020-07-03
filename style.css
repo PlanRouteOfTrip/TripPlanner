@@ -1,0 +1,39 @@
+html,
+body {
+  height: 100%;
+}
+
+.container {
+  display: flex;
+  height: 100%;
+  flex-direction: row;
+}
+
+#map {
+  height: 100%;
+  width: 65%;
+}
+
+#form {
+  height: 100%;
+  width: 35%;
+  /* align-items: center;
+  align-content: center; */
+  text-align: center;
+}
+
+h2 {
+  color: black;
+  text-align: center;
+}
+
+#findTrips {
+    margin: 30px;
+}
+
+#addPoint {
+    margin: 20px
+}
+#addStart {
+    margin: 20px
+}
