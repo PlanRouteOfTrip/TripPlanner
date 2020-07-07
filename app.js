@@ -2,12 +2,7 @@ var google;
 
 let points = [];
 let pointsNameOnly = [];
-let startPoint = document.getElementById("yourLocation").value;
-
-document.getElementById("addStart").addEventListener("click", function (e) {
-  e.preventDefault();
-  startPoint = document.getElementById("yourLocation").value;
-});
+let startPoint
 
 document.getElementById("addPoint").addEventListener("click", function (e) {
   e.preventDefault();
@@ -28,60 +23,41 @@ document.getElementById("addPoint").addEventListener("click", function (e) {
     query: place,
     fields: ["name", "geometry"],
   };
+  findPlace(request)
+});
 
+document.getElementById("addStart").addEventListener("click", function (e) {
+  e.preventDefault();
+  let start = document.getElementById("yourLocation").value;
+  var request = {
+    query: start,
+    fields: ["name", "geometry"]
+  };
+  findPlace(request)
+})
+
+document.getElementById("addFinish").addEventListener("click", function (e) {
+  e.preventDefault();
+  let end = document.getElementById("finishLocation").value;
+  var request = {
+    query: end,
+    fields: ["name", "geometry"]
+  };
+  findPlace(request)
+})
+
+function findPlace (request) {
   service = new google.maps.places.PlacesService(map);
-
   service.findPlaceFromQuery(request, function (results, status) {
     if (status === google.maps.places.PlacesServiceStatus.OK) {
       for (var i = 0; i < results.length; i++) {
         createMarker(results[i]);
       }
+  
       map.setCenter(results[0].geometry.location);
     }
   });
-});
-
-document.getElementById("addStart").addEventListener("click", function (e) {
-  e.preventDefault();
-  let start = document.getElementById("startPoint").value;
-  var request = {
-    query: start,
-    fields: ["name", "geometry"]
-  };
-
-service = new google.maps.places.PlacesService(map);
-
-service.findPlaceFromQuery(request, function (results, status) {
-  if (status === google.maps.places.PlacesServiceStatus.OK) {
-    for (var i = 0; i < results.length; i++) {
-      createMarker(results[i]);
-    }
-    console.log(results)
-    map.setCenter(results[0].geometry.location);
-  }
-});
-})
-
-document.getElementById("addEnd").addEventListener("click", function (e) {
-  e.preventDefault();
-  let end = document.getElementById("finalPoint").value;
-  var request = {
-    query: end,
-    fields: ["name", "geometry"]
-  };
-
-service = new google.maps.places.PlacesService(map);
-
-service.findPlaceFromQuery(request, function (results, status) {
-  if (status === google.maps.places.PlacesServiceStatus.OK) {
-    for (var i = 0; i < results.length; i++) {
-      createMarker(results[i]);
-    }
-
-    map.setCenter(results[0].geometry.location);
-  }
-});
-})
+}
 
 function createMarker(place) {
   var marker = new google.maps.Marker({
