@@ -12,25 +12,39 @@
   <body>
     <div class="container">
       <div id="map"></div>
-      <div id="form">
+      <div class="form">
         <h2>Create Your Trip:</h2>
-        <form id="start">
-          <label for="startPoint">Starting Point:</label><br />
+        <form class="start">
+          <!-- <label for="yourLocation">Your starting location:</label><br /> -->
+          <h3>1. Set your starting location: </h3>
           <input
             type="text"
-            id="startPoint"
-            placeholder="starting point"
+            id="yourLocation"
+            placeholder="Your starting point (full address for now)"
           /><br />
-          <label for="totalTime">Time of The Trip:</label><br />
-          <input type="number" id="totalTime" placeholder="minutes" /><br />
-          <button type="submit" id="addStart">Sumbit</button>
+          <!-- <label for="totalTime">Total Trip Time:</label><br /> -->
+          <input type="number" id="totalTime" placeholder="Total trip time in minutes" /><br />
+          <!-- <label for="startTime">Start Time:</label><br /> -->
+          <input type="number" id="startTime" placeholder="Date and time when trip starts" /><br />
+          <button type="submit" id="addStart">Set starting location</button>
+        </form>
+        <form class="finish">
+          <!-- <label for="finishLocation">Your finish location:</label><br /> -->
+          <h3>2. Set your finish location: </h3>
+          <input
+            type="text"
+            id="finishLocation"
+            placeholder="Finish point (full address for now) - we will use strating point if not specified"
+          /><br />
+          <button type="submit" id="addFinish">Set finish location</button>
         </form>
         <form id="locations">
-          <label for="location">Point to Visit:</label><br />
-          <input type="text" id="point" placeholder="point" /><br />
-          <label for="time">Time to spend:</label><br />
-          <input type="number" id="timeInPlace" placeholder="minutes" /><br />
-          <button type="submit" id="addPoint">Add</button>
+          <!-- <label for="location">Point:</label><br /> -->
+          <h3>3. Add places you want to visit: </h3>
+          <input type="text" id="point" placeholder="Point of interest (full address for now)" /><br />
+          <!-- <label for="time">Time to spend:</label><br /> -->
+          <input type="number" id="timeInPlace" placeholder="Time you plan to spend there in minutes" /><br />
+          <button type="submit" id="addPoint">Add point of interest to the list</button>
         </form>
         <form id="end">
           <label for="finalPoint">Final Destination:</label><br />
@@ -42,10 +56,10 @@
           <button type="submit" id="addEnd">Sumbit</button>
         </form>
         <div>
-          <h5>List of All Places</h5>
+          <h5>All points of interest to visit on this trip:</h5>
           <ul id="listAllPlaces"></ul>
         </div>
-        <button type="button" id="findTrips">Find Best Options of Trip</button>
+        <button type="button" id="findTrips">4. Find best options of the trip</button>
       </div>
     </div>
     <script src="./map.js"></script>

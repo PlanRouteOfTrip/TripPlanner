@@ -9,31 +9,68 @@ body {
   flex-direction: row;
 }
 
+label  {
+  padding: 6px 6px 3px 0;
+  display: inline-block;
+}
+
 #map {
   height: 100%;
   width: 65%;
 }
 
-#form {
+.form {
   height: 100%;
   width: 35%;
+  padding-left: 20px;
   /* align-items: center;
   align-content: center; */
-  text-align: center;
+  /* text-align: center; */
+}
+
+button[type=submit] {
+  padding: 6px;
+  margin: 12px;
+  width: 85%;
+  /* align-self: left; */
+
+}
+
+input {
+  width: 85%;
+  margin: 6px;
+  padding: 3px;
 }
 
 h2 {
   color: black;
-  text-align: center;
+}
+
+h3 {
+  margin: 6px;
+}
+
+h5 {
+  margin: 6px;
 }
 
 #findTrips {
-    margin: 30px;
+    background-color: green;
+    margin: 12px;
+    width: 85%;
+    padding: 12px;
+    font-size: 18.72px;
+    font-weight: bold;
 }
 
+/* 
 #addPoint {
     margin: 20px
 }
 #addStart {
     margin: 20px
+} */
+
+ul {
+  list-style-type: none;
 }
