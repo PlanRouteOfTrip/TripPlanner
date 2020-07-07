@@ -28,14 +28,22 @@ let points = [
     minsToSpend: 40,
   },
 ];
+
+// let travelTimes = [
+//   [0, 10, 40, 30, 15, 34, 41],
+//   [10, 0, 33, 26, 23, 15, 10],
+//   [40, 33, 0, 23, 13, 30, 20],
+//   [30, 26, 23, 0, 12, 15, 8],
+//   [15, 23, 13, 12, 0, 22, 9],
+//   [34, 15, 30, 15, 22, 0, 7],
+//   [41, 10, 20, 8, 9, 7, 0],
+// ];
+
+//temporary TravelTimes set for testing
 let travelTimes = [
-  [0, 10, 40, 30, 15, 34, 41],
-  [10, 0, 33, 26, 23, 15, 10],
-  [40, 33, 0, 23, 13, 30, 20],
-  [30, 26, 23, 0, 12, 15, 8],
-  [15, 23, 13, 12, 0, 22, 9],
-  [34, 15, 30, 15, 22, 0, 7],
-  [41, 10, 20, 8, 9, 7, 0],
+  [0, 10, 40],
+  [10, 0, 33],
+  [40, 33, 0]
 ];
 
 // //   let travelTimes = new Array(7).fill([0])
@@ -93,7 +101,7 @@ const getSets = (places, totalTripTime) => {
     }
     //check if trip is already in finalSet
     if (!checkSet(finalSet, trip)) {
-      finalSet.push(trip)``;
+      finalSet.push(trip);
     }
   }
   return finalSet;
@@ -125,4 +133,7 @@ const checkSet = (curSet, trip) => {
   return countOfFalse < curSet.length;
 };
 
-console.log(getSets(points, 200));
+// console.log(getSets(points, 200));
+
+module.exports = getSets;
+
