@@ -28,9 +28,9 @@ document.getElementById("addPoint").addEventListener("click", function (e) {
 
 document.getElementById("addStart").addEventListener("click", function (e) {
   e.preventDefault();
-  let start = document.getElementById("yourLocation").value;
+  startPoint = document.getElementById("yourLocation").value;
   var request = {
-    query: start,
+    query: startPoint,
     fields: ["name", "geometry"]
   };
   findPlace(request)
