@@ -1,9 +1,9 @@
 var google;
-
 let points = [];
 let pointsNameOnly = [];
 let startPoint
 
+// pressing of the button to add a place to the list 
 document.getElementById("addPoint").addEventListener("click", function (e) {
   e.preventDefault();
   let place = document.getElementById("point").value;
@@ -26,6 +26,7 @@ document.getElementById("addPoint").addEventListener("click", function (e) {
   findPlace(request)
 });
 
+// pressing of the button to add starting point of the trip
 document.getElementById("addStart").addEventListener("click", function (e) {
   e.preventDefault();
   startPoint = document.getElementById("yourLocation").value;
@@ -36,6 +37,7 @@ document.getElementById("addStart").addEventListener("click", function (e) {
   findPlace(request)
 })
 
+// pressing of the button to add final point of the trip
 document.getElementById("addFinish").addEventListener("click", function (e) {
   e.preventDefault();
   let end = document.getElementById("finishLocation").value;
@@ -46,6 +48,7 @@ document.getElementById("addFinish").addEventListener("click", function (e) {
   findPlace(request)
 })
 
+// finding place on a map using google places API
 function findPlace (request) {
   service = new google.maps.places.PlacesService(map);
   service.findPlaceFromQuery(request, function (results, status) {
@@ -59,6 +62,7 @@ function findPlace (request) {
   });
 }
 
+// mark place on a map 
 function createMarker(place) {
   var marker = new google.maps.Marker({
     map: map,
@@ -71,6 +75,7 @@ function createMarker(place) {
   });
 }
 
+// finding trip duration and distance using distance matrix API
 document.getElementById("findTrips").addEventListener("click", function (e) {
   e.preventDefault();
   console.log(`Starting point: ${startPoint}, points: ${pointsNameOnly}`)

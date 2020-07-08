@@ -15,35 +15,38 @@
       <div class="form">
         <h2>Create Your Trip:</h2>
         <form class="start">
-          <h3>1. Set your starting location:</h3>
+          <h3>1. Starting Point:</h3>
           <input
             type="text"
             id="yourLocation"
             placeholder="Your starting point (full address for now)"
           /><br />
-          <input
+          <!-- <input
             type="number"
             id="totalTime"
             placeholder="Total trip time in minutes"
-          /><br />
-          <!-- <input type="number" id="startTime" placeholder="Date and time when trip starts" /><br /> -->
+          /><br /> -->
           <div id="timeDate">
             <input type="date" name="dateoftrip" id="dateoftrip" />
             <input type="time" name="startTime" id="startTime" />
           </div>
-          <button type="submit" id="addStart">Set starting location</button>
+          <button type="submit" id="addStart">Set Start</button>
         </form>
         <form class="finish">
-          <h3>2. Set your finish location:</h3>
+          <h3>2. Final Destination</h3>
           <input
             type="text"
             id="finishLocation"
             placeholder="Finish point (full address for now) - we will use strating point if not specified"
           /><br />
-          <button type="submit" id="addFinish">Set finish location</button>
+          <div id="timeDate">
+            <input type="date" name="dateoftrip" id="dateoftrip" />
+            <input type="time" name="startTime" id="startTime" />
+          </div>
+          <button type="submit" id="addFinish">Set Finish</button>
         </form>
         <form class="locations">
-          <h3>3. Add places you want to visit:</h3>
+          <h3>3. Places to visit:</h3>
           <input
             type="text"
             id="point"
@@ -55,11 +58,11 @@
             placeholder="Time you plan to spend there in minutes"
           /><br />
           <button type="submit" id="addPoint">
-            Add point of interest to the list
+            Add place to the list
           </button>
         </form>
         <div>
-          <h5>All points of interest to visit on this trip:</h5>
+          <h5>All places to visit on this trip:</h5>
           <ul id="listAllPlaces"></ul>
         </div>
         <button type="button" id="findTrips">
