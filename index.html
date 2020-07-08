@@ -27,21 +27,21 @@
             placeholder="Total trip time in minutes"
           /><br /> -->
           <div id="timeDate">
-            <input type="date" name="dateoftrip" id="dateoftrip" />
+            <input type="date" name="dateOfTripStart" id="dateOfTripStart" />
             <input type="time" name="startTime" id="startTime" />
           </div>
           <button type="submit" id="addStart">Set Start</button>
         </form>
         <form class="finish">
-          <h3>2. Final Destination</h3>
+          <h3>2. Final Destination: </h3>
           <input
             type="text"
             id="finishLocation"
             placeholder="Finish point (full address for now) - we will use strating point if not specified"
           /><br />
           <div id="timeDate">
-            <input type="date" name="dateoftrip" id="dateoftrip" />
-            <input type="time" name="startTime" id="startTime" />
+            <input type="date" name="dateOfTripEnd" id="dateOfTripEnd" />
+            <input type="time" name="endTime" id="endTime" />
           </div>
           <button type="submit" id="addFinish">Set Finish</button>
         </form>
