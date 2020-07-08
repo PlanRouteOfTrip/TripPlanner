@@ -20,15 +20,23 @@ document.getElementById("addPoint").addEventListener("click", function (e) {
   document.getElementById("point").value = "";
   document.getElementById("timeInPlace").value = "";
 
-  let newPoint = document.createElement("li");
-  newPoint.innerText = place;
-  document.getElementById("listAllPlaces").appendChild(newPoint);
-
   var request = {
     query: place,
-    fields: ["name", "geometry"],
+    fields: ["name", "geometry", "formatted_address"],
   };
-  findPlace(request);
+
+  let newPlace = findPlace(request);
+  let newPoint = document.createElement("li");
+  newPoint.innerText = place
+  document.getElementById("listAllPlaces").appendChild(newPoint);
+
+  
+  //TO USE NAME OF THE PLACE AND ITS ADDRESS 
+
+  // newPoint.innerText = newPlace.name + ', ' + newPlace.formatted_address;
+  // document.getElementById("listAllPlaces").appendChild(newPoint);
+  // points.push({ index: newPlace.name, minsToSpend: minutes, address: newPlace.formatted_address});
+  // pointsNameOnly.push(place);
 });
 
 // pressing of the button to add starting point of the trip
@@ -37,7 +45,7 @@ document.getElementById("addStart").addEventListener("click", function (e) {
   startPoint = document.getElementById("yourLocation").value;
   var request = {
     query: startPoint,
-    fields: ["name", "geometry"],
+    fields: ["name", "geometry", "formatted_address"],
   };
   findPlace(request);
 
@@ -56,7 +64,7 @@ document.getElementById("addFinish").addEventListener("click", function (e) {
   let end = document.getElementById("finishLocation").value;
   var request = {
     query: end,
-    fields: ["name", "geometry"],
+    fields: ["name", "geometry", "formatted_address"],
   };
   findPlace(request);
 
@@ -76,15 +84,19 @@ document.getElementById("addFinish").addEventListener("click", function (e) {
 
 // finding place on a map using google places API
 function findPlace(request) {
+  let foundPoint
   service = new google.maps.places.PlacesService(map);
   service.findPlaceFromQuery(request, function (results, status) {
     if (status === google.maps.places.PlacesServiceStatus.OK) {
       for (var i = 0; i < results.length; i++) {
         createMarker(results[i]);
       }
+      console.log(results[0])
+      foundPoint = results[0]
       map.setCenter(results[0].geometry.location);
     }
   });
+  return foundPoint
 }
 
 // mark place on a map
