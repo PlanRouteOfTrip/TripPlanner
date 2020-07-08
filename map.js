@@ -1,6 +1,7 @@
-var map;
-var service;
 var infowindow;
+var google;
+var document;
+var map;
 
 
 function initMap() {
@@ -12,40 +13,7 @@ function initMap() {
     center: newYork,
     zoom: 10,
   });
-
-  document.getElementById("addStart").addEventListener("click", function (e) {
-    e.preventDefault();
-    let start = document.getElementById("yourLocation").value;
-  var request = {
-    query: start,
-    fields: ["name", "geometry"],
-  };
-
-  service = new google.maps.places.PlacesService(map);
-
-  service.findPlaceFromQuery(request, function (results, status) {
-    if (status === google.maps.places.PlacesServiceStatus.OK) {
-      for (var i = 0; i < results.length; i++) {
-        createMarker(results[i]);
-      }
-
-      map.setCenter(results[0].geometry.location);
-    }
-  });
-  })
-  
 }
 
-function createMarker(place) {
-  var marker = new google.maps.Marker({
-    map: map,
-    position: place.geometry.location,
-  });
-
-  google.maps.event.addListener(marker, "click", function () {
-    infowindow.setContent(place.name);
-    infowindow.open(map, this);
-  });
-}
 
 
