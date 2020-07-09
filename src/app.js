@@ -2,8 +2,9 @@ var infowindow;
 var google;
 var document = window.document;
 var map;
+var service;
+
 let points = [];
-let pointsNameOnly = [];
 let startPoint;
 
 let startDay;
@@ -12,7 +13,11 @@ let endDay;
 let endTime;
 let totalTripTime;
 
-window.initMap = function () {
+
+import {getTimeFromStart} from "./calculate-trip"
+
+window.initMap = function() {
+
   var newYork = new window.google.maps.LatLng(40.5941732, -73.9443477);
 
   infowindow = new window.google.maps.InfoWindow();
@@ -24,6 +29,7 @@ window.initMap = function () {
 };
 
 // pressing of the button to add a place to the list
+
 document
   .getElementById("addPoint")
   .addEventListener("click", async function (e) {
@@ -48,6 +54,8 @@ document
     newPoint.innerText = place;
     document.getElementById("listAllPlaces").appendChild(newPoint);
   });
+
+
 
 document.getElementById("point").value = "";
 document.getElementById("timeInPlace").value = "";
@@ -154,18 +162,8 @@ async function createMarker(place) {
 // finding trip duration and distance using distance matrix API
 document.getElementById("findTrips").addEventListener("click", function (e) {
   e.preventDefault();
-  console.log(`Starting point: ${startPoint}, points: ${pointsNameOnly}`);
-  var service = new window.google.maps.DistanceMatrixService();
-  service.getDistanceMatrix(
-    {
-      origins: [startPoint],
-      destinations: pointsNameOnly,
-      travelMode: "DRIVING",
-    },
-    function (response, status) {
-      console.log("from calculateTimeToFirstPoint", response, status);
-    }
-  );
+  let withTimeFromStart = getTimeFromStart(startPoint, points, totalTripTime)
+  console.log(withTimeFromStart.places)
 });
 
 //time difference - total trip time
