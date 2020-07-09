@@ -2,8 +2,9 @@ var infowindow;
 var google;
 var document = window.document;
 var map;
+var service;
+
 let points = [];
-let pointsNameOnly = [];
 let startPoint;
 
 let startDay;
@@ -11,6 +12,8 @@ let startTime;
 let endDay;
 let endTime;
 let totalTripTime;
+
+import {getTimeFromStart} from "./calculate-trip"
 
 
 window.initMap = function() {
@@ -32,7 +35,6 @@ document.getElementById("addPoint").addEventListener("click", function (e) {
   console.log(place);
   let minutes = document.getElementById("timeInPlace").value;
   points.push({ index: place, minsToSpend: minutes });
-  pointsNameOnly.push(place);
   document.getElementById("point").value = "";
   document.getElementById("timeInPlace").value = "";
 
@@ -131,18 +133,8 @@ function createMarker(place) {
 // finding trip duration and distance using distance matrix API
 document.getElementById("findTrips").addEventListener("click", function (e) {
   e.preventDefault();
-  console.log(`Starting point: ${startPoint}, points: ${pointsNameOnly}`);
-  var service = new window.google.maps.DistanceMatrixService();
-  service.getDistanceMatrix(
-    {
-      origins: [startPoint],
-      destinations: pointsNameOnly,
-      travelMode: "DRIVING",
-    },
-    function (response, status) {
-      console.log("from calculateTimeToFirstPoint", response, status);
-    }
-  );
+  let withTimeFromStart = getTimeFromStart(startPoint, points, totalTripTime)
+  console.log(withTimeFromStart.places)
 });
 
 //time difference - total trip time
