@@ -1,4 +1,7 @@
+var infowindow;
 var google;
+var document = window.document;
+var map;
 let points = [];
 let pointsNameOnly = [];
 let startPoint;
@@ -8,6 +11,19 @@ let startTime;
 let endDay;
 let endTime;
 let totalTripTime;
+
+
+window.initMap = function() {
+  var newYork = new window.google.maps.LatLng(40.5941732, -73.9443477);
+
+  infowindow = new window.google.maps.InfoWindow();
+
+  map = new window.google.maps.Map(document.getElementById("map"), {
+    center: newYork,
+    zoom: 10,
+  });
+}
+
 
 // pressing of the button to add a place to the list
 document.getElementById("addPoint").addEventListener("click", function (e) {
@@ -85,9 +101,9 @@ document.getElementById("addFinish").addEventListener("click", function (e) {
 // finding place on a map using google places API
 function findPlace(request) {
   let foundPoint
-  service = new google.maps.places.PlacesService(map);
+  service = new window.google.maps.places.PlacesService(map);
   service.findPlaceFromQuery(request, function (results, status) {
-    if (status === google.maps.places.PlacesServiceStatus.OK) {
+    if (status === window.google.maps.places.PlacesServiceStatus.OK) {
       for (var i = 0; i < results.length; i++) {
         createMarker(results[i]);
       }
@@ -101,12 +117,12 @@ function findPlace(request) {
 
 // mark place on a map
 function createMarker(place) {
-  var marker = new google.maps.Marker({
+  var marker = new window.google.maps.Marker({
     map: map,
     position: place.geometry.location,
   });
 
-  google.maps.event.addListener(marker, "click", function () {
+  window.google.maps.event.addListener(marker, "click", function () {
     infowindow.setContent(place.name);
     infowindow.open(map, this);
   });
@@ -116,7 +132,7 @@ function createMarker(place) {
 document.getElementById("findTrips").addEventListener("click", function (e) {
   e.preventDefault();
   console.log(`Starting point: ${startPoint}, points: ${pointsNameOnly}`);
-  var service = new google.maps.DistanceMatrixService();
+  var service = new window.google.maps.DistanceMatrixService();
   service.getDistanceMatrix(
     {
       origins: [startPoint],
