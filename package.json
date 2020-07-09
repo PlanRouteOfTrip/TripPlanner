@@ -5,7 +5,8 @@
   "private": true,
   "scripts": {
     "test": "jest",
-    "start": "webpack-dev-server"
+    "start": "webpack-dev-server",
+    "build": "webpack --config webpack.config.js"
   },
   "author": "",
   "license": "ISC",
@@ -20,6 +21,7 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.10.4",
-    "babel-loader": "^8.1.0"
+    "babel-loader": "^8.1.0",
+    "babel-polyfill": "^6.26.0"
   }
 }
