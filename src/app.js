@@ -33,27 +33,32 @@ document.getElementById("addPoint").addEventListener("click", function (e) {
   let minutes = document.getElementById("timeInPlace").value;
   points.push({ index: place, minsToSpend: minutes });
   pointsNameOnly.push(place);
-  document.getElementById("point").value = "";
-  document.getElementById("timeInPlace").value = "";
+  
 
   var request = {
     query: place,
-    fields: ["name", "geometry", "formatted_address"],
+    fields: ["name", "geometry", "formatted_address", "place_id"],
   };
 
   let newPlace = findPlace(request);
+  console.log("object of the place", newPlace);
   let newPoint = document.createElement("li");
   newPoint.innerText = place
   document.getElementById("listAllPlaces").appendChild(newPoint);
 
   
-  //TO USE NAME OF THE PLACE AND ITS ADDRESS 
+ //TO USE NAME OF THE PLACE AND ITS ADDRESS
 
-  // newPoint.innerText = newPlace.name + ', ' + newPlace.formatted_address;
-  // document.getElementById("listAllPlaces").appendChild(newPoint);
-  // points.push({ index: newPlace.name, minsToSpend: minutes, address: newPlace.formatted_address});
-  // pointsNameOnly.push(place);
-});
+    // newPoint.innerText = newPlace.name + ", " + newPlace.formatted_address;
+    // document.getElementById("listAllPlaces").appendChild(newPoint);
+    // points.push({
+    //   index: newPlace.name,
+    //   minsToSpend: minutes,
+    //   address: newPlace.formatted_address,
+    });
+    // pointsNameOnly.push(newPlace.formatted_address);
+    document.getElementById("point").value = "";
+    document.getElementById("timeInPlace").value = "";
 
 // pressing of the button to add starting point of the trip
 document.getElementById("addStart").addEventListener("click", function (e) {
@@ -61,7 +66,7 @@ document.getElementById("addStart").addEventListener("click", function (e) {
   startPoint = document.getElementById("yourLocation").value;
   var request = {
     query: startPoint,
-    fields: ["name", "geometry", "formatted_address"],
+    fields: ["name", "geometry", "formatted_address", "place_id"],
   };
   findPlace(request);
 
@@ -80,7 +85,7 @@ document.getElementById("addFinish").addEventListener("click", function (e) {
   let end = document.getElementById("finishLocation").value;
   var request = {
     query: end,
-    fields: ["name", "geometry", "formatted_address"],
+    fields: ["name", "geometry", "formatted_address", "place_id"],
   };
   findPlace(request);
 
@@ -105,10 +110,10 @@ function findPlace(request) {
   service.findPlaceFromQuery(request, function (results, status) {
     if (status === window.google.maps.places.PlacesServiceStatus.OK) {
       for (var i = 0; i < results.length; i++) {
-        createMarker(results[i]);
+        foundPoint = createMarker(results[i]);
       }
-      console.log(results[0])
-      foundPoint = results[0]
+      // console.log(results[0])
+      // foundPoint = results[0]
       map.setCenter(results[0].geometry.location);
     }
   });
@@ -120,12 +125,27 @@ function createMarker(place) {
   var marker = new window.google.maps.Marker({
     map: map,
     position: place.geometry.location,
+    placeId: place.place_id
   });
 
   window.google.maps.event.addListener(marker, "click", function () {
     infowindow.setContent(place.name);
     infowindow.open(map, this);
   });
+
+  let request = {
+    placeId: marker.placeId,
+    fields: ["name", "opening_hours"]
+  };
+  let hours
+  service.getDetails(request, (place, status) => {
+    if (status === window.google.maps.places.PlacesServiceStatus.OK) {
+      if (place.opening_hours) hours = place.opening_hours.periods;
+    }
+    // hours is an array of days as objects
+    console.log(hours)
+  })
+  return [place.name, place.formatted_address, hours]
 }
 
 // finding trip duration and distance using distance matrix API
