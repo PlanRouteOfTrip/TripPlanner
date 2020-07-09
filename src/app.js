@@ -13,10 +13,11 @@ let endDay;
 let endTime;
 let totalTripTime;
 
+
 import {getTimeFromStart} from "./calculate-trip"
 
-
 window.initMap = function() {
+
   var newYork = new window.google.maps.LatLng(40.5941732, -73.9443477);
 
   infowindow = new window.google.maps.InfoWindow();
@@ -25,37 +26,39 @@ window.initMap = function() {
     center: newYork,
     zoom: 10,
   });
-}
-
+};
 
 // pressing of the button to add a place to the list
-document.getElementById("addPoint").addEventListener("click", function (e) {
-  e.preventDefault();
-  let place = document.getElementById("point").value;
-  console.log(place);
-  let minutes = document.getElementById("timeInPlace").value;
-  points.push({ index: place, minsToSpend: minutes });
-  document.getElementById("point").value = "";
-  document.getElementById("timeInPlace").value = "";
 
-  var request = {
-    query: place,
-    fields: ["name", "geometry", "formatted_address"],
-  };
+document
+  .getElementById("addPoint")
+  .addEventListener("click", async function (e) {
+    e.preventDefault();
+    console.log('points', points)
+    let place = document.getElementById("point").value;
+    let minutes = document.getElementById("timeInPlace").value;
+    
+    points.push({
+        index: place,
+        minsToSpend: minutes})
+      
+    var request = {
+      query: place,
+      fields: ["name", "geometry", "formatted_address", "place_id"],
+    };
 
-  let newPlace = findPlace(request);
-  let newPoint = document.createElement("li");
-  newPoint.innerText = place
-  document.getElementById("listAllPlaces").appendChild(newPoint);
+    let newPlace = await findPlace(request);
+    console.log("object of the place", newPlace);
+   
+    let newPoint = document.createElement("li");
+    newPoint.innerText = place;
+    document.getElementById("listAllPlaces").appendChild(newPoint);
+  });
 
-  
-  //TO USE NAME OF THE PLACE AND ITS ADDRESS 
 
-  // newPoint.innerText = newPlace.name + ', ' + newPlace.formatted_address;
-  // document.getElementById("listAllPlaces").appendChild(newPoint);
-  // points.push({ index: newPlace.name, minsToSpend: minutes, address: newPlace.formatted_address});
-  // pointsNameOnly.push(place);
-});
+
+document.getElementById("point").value = "";
+document.getElementById("timeInPlace").value = "";
 
 // pressing of the button to add starting point of the trip
 document.getElementById("addStart").addEventListener("click", function (e) {
@@ -63,7 +66,7 @@ document.getElementById("addStart").addEventListener("click", function (e) {
   startPoint = document.getElementById("yourLocation").value;
   var request = {
     query: startPoint,
-    fields: ["name", "geometry", "formatted_address"],
+    fields: ["name", "geometry", "formatted_address", "place_id"],
   };
   findPlace(request);
 
@@ -82,7 +85,7 @@ document.getElementById("addFinish").addEventListener("click", function (e) {
   let end = document.getElementById("finishLocation").value;
   var request = {
     query: end,
-    fields: ["name", "geometry", "formatted_address"],
+    fields: ["name", "geometry", "formatted_address", "place_id"],
   };
   findPlace(request);
 
@@ -101,33 +104,59 @@ document.getElementById("addFinish").addEventListener("click", function (e) {
 });
 
 // finding place on a map using google places API
-function findPlace(request) {
-  let foundPoint
+async function findPlace(request) {
+  let foundPoint;
+  console.log("I am here searching point on a map!");
   service = new window.google.maps.places.PlacesService(map);
-  service.findPlaceFromQuery(request, function (results, status) {
-    if (status === window.google.maps.places.PlacesServiceStatus.OK) {
-      for (var i = 0; i < results.length; i++) {
-        createMarker(results[i]);
+  try {
+    await service.findPlaceFromQuery(request, async function (results, status) {
+      if (status === window.google.maps.places.PlacesServiceStatus.OK) {
+        for (var i = 0; i < results.length; i++) {
+          foundPoint = await createMarker(results[i]);
+        }
+        map.setCenter(results[0].geometry.location);
       }
-      console.log(results[0])
-      foundPoint = results[0]
-      map.setCenter(results[0].geometry.location);
-    }
-  });
-  return foundPoint
+
+      console.log("found point", foundPoint);
+      return foundPoint;
+    });
+  } catch (error) {
+    console.log("no point found", error);
+  }
 }
 
 // mark place on a map
-function createMarker(place) {
-  var marker = new window.google.maps.Marker({
-    map: map,
-    position: place.geometry.location,
-  });
+async function createMarker(place) {
+  try {
+    var marker = new window.google.maps.Marker({
+      map: map,
+      position: place.geometry.location,
+      placeId: place.place_id,
+    });
 
-  window.google.maps.event.addListener(marker, "click", function () {
-    infowindow.setContent(place.name);
-    infowindow.open(map, this);
-  });
+    window.google.maps.event.addListener(marker, "click", function () {
+      infowindow.setContent(place.name);
+      infowindow.open(map, this);
+    });
+
+    let request = {
+      placeId: marker.placeId,
+      fields: ["name", "formatted_address", "opening_hours"],
+    };
+
+    let goalPlace;
+
+    await service.getDetails(request, (place, status) => {
+      if (status === window.google.maps.places.PlacesServiceStatus.OK) {
+        goalPlace = place;
+      }
+      console.log("goal", goalPlace);
+      // points.push(goalPlace)
+    });
+    return goalPlace;
+  } catch (error) {
+    console.log("error", error);
+  }
 }
 
 // finding trip duration and distance using distance matrix API
