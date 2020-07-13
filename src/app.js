@@ -41,7 +41,7 @@ document
     
     points.push({
         index: place,
-        minsToSpend: minutes})
+        minsToSpend: Number(minutes)})
 
     let newPlace = await getFoundPlace(place);
     console.log("object of the place", newPlace);

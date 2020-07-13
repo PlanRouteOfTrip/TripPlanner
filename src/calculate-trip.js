@@ -58,6 +58,7 @@ export function getTimeToFinish (endPoint, places, totalTripTime = 0) {
   let finalPlaces = []
   let placesAdressesOnly = [];
 
+  // WHY PLACES.LENGTH IS 0????? BUT ARRAY HAS OBJECTS IN IT 
   console.log("length", places.length)
   console.log("places", places)
   console.log("length", places.length)
