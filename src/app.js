@@ -12,9 +12,10 @@ let startTime;
 let endDay;
 let endTime;
 let totalTripTime;
+let endPoint;
 
 
-import {getTimeFromStart} from "./calculate-trip"
+import {getTimeFromStart, getTimeToFinish} from "./calculate-trip"
 
 window.initMap = function() {
 
@@ -73,8 +74,9 @@ document.getElementById("addStart").addEventListener("click", function (e) {
 // pressing of the button to add final point of the trip
 document.getElementById("addFinish").addEventListener("click", function (e) {
   e.preventDefault();
-  let end = document.getElementById("finishLocation").value;
-  getFoundPlace(end);
+  endPoint = document.getElementById("finishLocation").value;
+  if (!endPoint.length) endPoint = startPoint
+  getFoundPlace(endPoint);
 
   // check if date of trip end is chosen
   endDay = document.getElementById("dateOfTripEnd").value;
@@ -164,7 +166,10 @@ async function createMarker(place) {
 document.getElementById("findTrips").addEventListener("click", function (e) {
   e.preventDefault();
   let withTimeFromStart = getTimeFromStart(startPoint, points, totalTripTime)
-  console.log(withTimeFromStart.places)
+  // console.log(withTimeFromStart.places)
+  console.log("places from time from start", withTimeFromStart.places)
+  let withTimeToFinish = getTimeToFinish(endPoint, withTimeFromStart.places, totalTripTime)
+  console.log("places to finish", withTimeToFinish)
 });
 
 //time difference - total trip time
