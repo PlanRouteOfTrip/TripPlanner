@@ -41,13 +41,8 @@ document
     points.push({
         index: place,
         minsToSpend: minutes})
-      
-    var request = {
-      query: place,
-      fields: ["name", "geometry", "formatted_address", "place_id"],
-    };
 
-    let newPlace = await findPlace(request);
+    let newPlace = await getFoundPlace(place);
     console.log("object of the place", newPlace);
    
     let newPoint = document.createElement("li");
@@ -64,11 +59,7 @@ document.getElementById("timeInPlace").value = "";
 document.getElementById("addStart").addEventListener("click", function (e) {
   e.preventDefault();
   startPoint = document.getElementById("yourLocation").value;
-  var request = {
-    query: startPoint,
-    fields: ["name", "geometry", "formatted_address", "place_id"],
-  };
-  findPlace(request);
+  getFoundPlace(startPoint);
 
   // check if date of trip start is chosen
   startDay = document.getElementById("dateOfTripStart").value;
@@ -83,11 +74,7 @@ document.getElementById("addStart").addEventListener("click", function (e) {
 document.getElementById("addFinish").addEventListener("click", function (e) {
   e.preventDefault();
   let end = document.getElementById("finishLocation").value;
-  var request = {
-    query: end,
-    fields: ["name", "geometry", "formatted_address", "place_id"],
-  };
-  findPlace(request);
+  getFoundPlace(end);
 
   // check if date of trip end is chosen
   endDay = document.getElementById("dateOfTripEnd").value;
@@ -103,31 +90,56 @@ document.getElementById("addFinish").addEventListener("click", function (e) {
   console.log("this is total time in minutes", totalTripTime);
 });
 
-// finding place on a map using google places API
-async function findPlace(request) {
-  let foundPoint;
-  console.log("I am here searching point on a map!");
-  service = new window.google.maps.places.PlacesService(map);
-  try {
-    await service.findPlaceFromQuery(request, async function (results, status) {
+function getFoundPlace (place) {
+  var request = {
+    query: place,
+    fields: ["name", "geometry", "formatted_address", "place_id"],
+  };
+  return new Promise((resolve, reject) => {
+    service = new window.google.maps.places.PlacesService(map);
+    service.findPlaceFromQuery(request, async function (results, status) {
       if (status === window.google.maps.places.PlacesServiceStatus.OK) {
-        for (var i = 0; i < results.length; i++) {
-          foundPoint = await createMarker(results[i]);
-        }
-        map.setCenter(results[0].geometry.location);
+          let foundPoint = await createMarker(results[0]);
+          map.setCenter(results[0].geometry.location);
+          resolve(foundPoint)
       }
-
-      console.log("found point", foundPoint);
-      return foundPoint;
-    });
-  } catch (error) {
-    console.log("no point found", error);
-  }
+  })
+})
 }
+
+// finding place on a map using google places API
+// async function findPlace(place) {
+//   let foundPoint;
+//   console.log("I am here searching point on a map!");
+//   service = new window.google.maps.places.PlacesService(map);
+//   try {
+//       return await getFoundPlace(place);
+//     }
+//    catch (error) {
+//     console.log("no point found", error);
+//   }
+// }
+
+function getGoalPlace(placeId) {
+  let request = {
+    placeId: placeId,
+    fields: ["name", "formatted_address", "opening_hours"],
+  };
+
+  return new Promise((resolve, reject) => {
+    service.getDetails(request, (place, status) => {
+      if (status === window.google.maps.places.PlacesServiceStatus.OK) {
+        resolve(place)
+      }
+    });
+  })
+}
+
 
 // mark place on a map
 async function createMarker(place) {
   try {
+    console.log("this is place", place)
     var marker = new window.google.maps.Marker({
       map: map,
       position: place.geometry.location,
@@ -139,20 +151,9 @@ async function createMarker(place) {
       infowindow.open(map, this);
     });
 
-    let request = {
-      placeId: marker.placeId,
-      fields: ["name", "formatted_address", "opening_hours"],
-    };
+    let goalPlace = await getGoalPlace(marker.placeId);
+    console.log("goal", goalPlace)
 
-    let goalPlace;
-
-    await service.getDetails(request, (place, status) => {
-      if (status === window.google.maps.places.PlacesServiceStatus.OK) {
-        goalPlace = place;
-      }
-      console.log("goal", goalPlace);
-      // points.push(goalPlace)
-    });
     return goalPlace;
   } catch (error) {
     console.log("error", error);
