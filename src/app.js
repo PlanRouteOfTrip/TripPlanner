@@ -14,11 +14,9 @@ let endTime;
 let totalTripTime;
 let endPoint;
 
+import { getTimeFromStart, getTimeToFinish } from "./calculate-trip";
 
-import {getTimeFromStart, getTimeToFinish} from "./calculate-trip"
-
-window.initMap = function() {
-
+window.initMap = function () {
   var newYork = new window.google.maps.LatLng(40.5941732, -73.9443477);
 
   infowindow = new window.google.maps.InfoWindow();
@@ -35,64 +33,77 @@ document
   .getElementById("addPoint")
   .addEventListener("click", async function (e) {
     e.preventDefault();
-    console.log('points', points)
+    console.log("points", points);
     let place = document.getElementById("point").value;
     let minutes = document.getElementById("timeInPlace").value;
-    
-    points.push({
-        index: place,
-        minsToSpend: Number(minutes)})
 
     let newPlace = await getFoundPlace(place);
     console.log("object of the place", newPlace);
-   
+
+    if (newPlace.opening_hours) {
+      points.push({
+        name: newPlace.name,
+        address: newPlace.formatted_address,
+        minsToSpend: Number(minutes),
+        hours: newPlace.opening_hours,
+      });
+    } else {
+      points.push({
+        name: newPlace.name,
+        address: newPlace.formatted_address,
+        minsToSpend: Number(minutes),
+      });
+    }
+
     let newPoint = document.createElement("li");
-    newPoint.innerText = place;
+    newPoint.innerText = newPlace.name;
     document.getElementById("listAllPlaces").appendChild(newPoint);
+
+    document.getElementById("point").value = "";
+    document.getElementById("timeInPlace").value = "";
   });
 
-
-
-document.getElementById("point").value = "";
-document.getElementById("timeInPlace").value = "";
-
 // pressing of the button to add starting point of the trip
-document.getElementById("addStart").addEventListener("click", function (e) {
-  e.preventDefault();
-  startPoint = document.getElementById("yourLocation").value;
-  getFoundPlace(startPoint);
+document
+  .getElementById("addStart")
+  .addEventListener("click", async function (e) {
+    e.preventDefault();
+    let start = document.getElementById("yourLocation").value;
+    startPoint = await getFoundPlace(start);
 
-  // check if date of trip start is chosen
-  startDay = document.getElementById("dateOfTripStart").value;
-  console.log("this is start date", startDay);
+    // check if date of trip start is chosen
+    startDay = document.getElementById("dateOfTripStart").value;
+    // console.log("this is start date", startDay);
 
-  // check if time of trip start is chosen
-  startTime = document.getElementById("startTime").value;
-  console.log("this is start time", startTime);
-});
+    // check if time of trip start is chosen
+    startTime = document.getElementById("startTime").value;
+    // console.log("this is start time", startTime);
+  });
 
 // pressing of the button to add final point of the trip
-document.getElementById("addFinish").addEventListener("click", function (e) {
-  e.preventDefault();
-  endPoint = document.getElementById("finishLocation").value;
-  if (!endPoint.length) endPoint = startPoint
-  getFoundPlace(endPoint);
+document
+  .getElementById("addFinish")
+  .addEventListener("click", async function (e) {
+    e.preventDefault();
+    let end = document.getElementById("finishLocation").value;
+    if (!end.length) endPoint = startPoint;
+    else endPoint = await getFoundPlace(end);
 
-  // check if date of trip end is chosen
-  endDay = document.getElementById("dateOfTripEnd").value;
-  console.log("this is end date", endDay);
+    // check if date of trip end is chosen
+    endDay = document.getElementById("dateOfTripEnd").value;
+    // console.log("this is end date", endDay);
 
-  // check if time of trip end is chosen
-  endTime = document.getElementById("endTime").value;
-  console.log("this is end time", endTime);
+    // check if time of trip end is chosen
+    endTime = document.getElementById("endTime").value;
+    // console.log("this is end time", endTime);
 
-  let dt1 = new Date(startDay + "T" + startTime);
-  let dt2 = new Date(endDay + "T" + endTime);
-  totalTripTime = diff_hours(dt2, dt1);
-  console.log("this is total time in minutes", totalTripTime);
-});
+    let dt1 = new Date(startDay + "T" + startTime);
+    let dt2 = new Date(endDay + "T" + endTime);
+    totalTripTime = diff_hours(dt2, dt1);
+    console.log("this is total time in minutes", totalTripTime);
+  });
 
-function getFoundPlace (place) {
+function getFoundPlace(place) {
   var request = {
     query: place,
     fields: ["name", "geometry", "formatted_address", "place_id"],
@@ -101,26 +112,13 @@ function getFoundPlace (place) {
     service = new window.google.maps.places.PlacesService(map);
     service.findPlaceFromQuery(request, async function (results, status) {
       if (status === window.google.maps.places.PlacesServiceStatus.OK) {
-          let foundPoint = await createMarker(results[0]);
-          map.setCenter(results[0].geometry.location);
-          resolve(foundPoint)
+        let foundPoint = await createMarker(results[0]);
+        map.setCenter(results[0].geometry.location);
+        resolve(foundPoint);
       }
-  })
-})
+    });
+  });
 }
-
-// finding place on a map using google places API
-// async function findPlace(place) {
-//   let foundPoint;
-//   console.log("I am here searching point on a map!");
-//   service = new window.google.maps.places.PlacesService(map);
-//   try {
-//       return await getFoundPlace(place);
-//     }
-//    catch (error) {
-//     console.log("no point found", error);
-//   }
-// }
 
 function getGoalPlace(placeId) {
   let request = {
@@ -131,17 +129,16 @@ function getGoalPlace(placeId) {
   return new Promise((resolve, reject) => {
     service.getDetails(request, (place, status) => {
       if (status === window.google.maps.places.PlacesServiceStatus.OK) {
-        resolve(place)
+        resolve(place);
       }
     });
-  })
+  });
 }
-
 
 // mark place on a map
 async function createMarker(place) {
   try {
-    console.log("this is place", place)
+    console.log("this is place", place);
     var marker = new window.google.maps.Marker({
       map: map,
       position: place.geometry.location,
@@ -154,7 +151,7 @@ async function createMarker(place) {
     });
 
     let goalPlace = await getGoalPlace(marker.placeId);
-    console.log("goal", goalPlace)
+    console.log("goal", goalPlace);
 
     return goalPlace;
   } catch (error) {
@@ -165,11 +162,14 @@ async function createMarker(place) {
 // finding trip duration and distance using distance matrix API
 document.getElementById("findTrips").addEventListener("click", function (e) {
   e.preventDefault();
-  let withTimeFromStart = getTimeFromStart(startPoint, points, totalTripTime)
-  // console.log(withTimeFromStart.places)
-  console.log("places from time from start", withTimeFromStart.places)
-  let withTimeToFinish = getTimeToFinish(endPoint, withTimeFromStart.places, totalTripTime)
-  console.log("places to finish", withTimeToFinish)
+  let withTimeFromStart = getTimeFromStart(startPoint, points, totalTripTime);
+  console.log("places from time from start", withTimeFromStart.places);
+  let withTimeToFinish = getTimeToFinish(
+    endPoint,
+    withTimeFromStart.places,
+    totalTripTime
+  );
+  console.log("places to finish", withTimeToFinish);
 });
 
 //time difference - total trip time
