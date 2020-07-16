@@ -50,10 +50,12 @@ export function getTimeFromStart(startPoint, places, totalTripTime = 0) {
       }
     }
   );
-  return {
-    error: error,
-    places: newPlaces,
-  };
+  // return {
+  //   error: error,
+  //   places: newPlaces,
+  // };
+  console.log('places from getTimeFromStart', newPlaces, newPlaces.length)
+  return newPlaces
 }
 
 // const places1 = [{
@@ -68,9 +70,12 @@ export function getTimeToFinish(endPoint, places, totalTripTime = 0) {
   let placesAdressesOnly = [];
 
   // WHY PLACES.LENGTH IS 0????? BUT ARRAY HAS OBJECTS IN IT
-  console.log("length", places.length);
+  
+  setTimeout(function() {
+    console.log("length", places.length);
+
+  }, 5000)
   console.log("places", places, places.length);
-  console.log("length", places.length);
 
   // if (!endPoint || !places || !places.length) {
   //   return {

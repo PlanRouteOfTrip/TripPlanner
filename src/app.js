@@ -33,7 +33,7 @@ document
   .getElementById("addPoint")
   .addEventListener("click", async function (e) {
     e.preventDefault();
-    console.log("points", points);
+    console.log("points", points, points.length);
     let place = document.getElementById("point").value;
     let minutes = document.getElementById("timeInPlace").value;
 
@@ -163,10 +163,18 @@ async function createMarker(place) {
 document.getElementById("findTrips").addEventListener("click", function (e) {
   e.preventDefault();
   let withTimeFromStart = getTimeFromStart(startPoint, points, totalTripTime);
-  console.log("places from time from start", withTimeFromStart.places);
+
+  // let withTimeFromStart = []
+  // await setTimeout(function() {
+  //   console.log('from setTimeOut', startPoint, points)
+  //   let newArr = getTimeFromStart(startPoint, points, totalTripTime)
+  //   withTimeFromStart = [...newArr]
+  // }, 5000)
+  console.log("places from time from start", withTimeFromStart, withTimeFromStart.length);
+  
   let withTimeToFinish = getTimeToFinish(
     endPoint,
-    withTimeFromStart.places,
+    withTimeFromStart,
     totalTripTime
   );
   console.log("places to finish", withTimeToFinish);
