@@ -33,7 +33,7 @@ document
   .getElementById("addPoint")
   .addEventListener("click", async function (e) {
     e.preventDefault();
-    console.log("points", points);
+    console.log("points", points, points.length);
     let place = document.getElementById("point").value;
     let minutes = document.getElementById("timeInPlace").value;
 
@@ -162,14 +162,21 @@ async function createMarker(place) {
 // finding trip duration and distance using distance matrix API
 document.getElementById("findTrips").addEventListener("click", function (e) {
   e.preventDefault();
+
   let withTimeFromStart = getTimeFromStart(startPoint, points, totalTripTime);
-  console.log("places from time from start", withTimeFromStart.places);
-  let withTimeToFinish = getTimeToFinish(
-    endPoint,
-    withTimeFromStart.places,
-    totalTripTime
-  );
-  console.log("places to finish", withTimeToFinish);
+  setTimeout(function () {
+    console.log(
+      "places from time from start",
+      withTimeFromStart,
+      withTimeFromStart.length
+    );
+    let withTimeToFinish = getTimeToFinish(
+      endPoint,
+      withTimeFromStart,
+      totalTripTime
+    );
+    console.log("places to finish", withTimeToFinish);
+  }, 1000);
 });
 
 //time difference - total trip time

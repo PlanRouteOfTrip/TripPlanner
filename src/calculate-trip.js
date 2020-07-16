@@ -50,34 +50,28 @@ export function getTimeFromStart(startPoint, places, totalTripTime = 0) {
       }
     }
   );
-  return {
-    error: error,
-    places: newPlaces,
-  };
+  // return {
+  //   error: error,
+  //   places: newPlaces,
+  // };
+  return newPlaces
 }
 
-// const places1 = [{
-//   address: "1820 Avenue N, Brooklyn, NY",
-//   minsToSpend: 10,
-//   timeFromStart: 10,
-// }]
+
 
 export function getTimeToFinish(endPoint, places, totalTripTime = 0) {
   let error = "";
   let finalPlaces = [];
   let placesAdressesOnly = [];
 
-  // WHY PLACES.LENGTH IS 0????? BUT ARRAY HAS OBJECTS IN IT
-  console.log("length", places.length);
   console.log("places", places, places.length);
-  console.log("length", places.length);
 
-  // if (!endPoint || !places || !places.length) {
-  //   return {
-  //     error: "Starting point/ending point or places to visit are not specified",
-  //     finalPlaces: []
-  //   }
-  // }
+  if (!endPoint || !places || !places.length) {
+    return {
+      error: "Starting point/ending point or places to visit are not specified",
+      finalPlaces: []
+    }
+  }
 
   for (let i = 0; i < places.length; i++) {
     placesAdressesOnly.push(places[i].address);
@@ -99,10 +93,10 @@ export function getTimeToFinish(endPoint, places, totalTripTime = 0) {
           let curPlace = places[i];
           let curTimeToFinish = Math.floor(foundTimes[i].duration.value / 60);
           if (
-            currentPlace.minsToSpend + curTimeToFinish + timeFromStart <
+            curPlace.minsToSpend + curTimeToFinish + curPlace.timeFromStart <
             totalTripTime
           ) {
-            currentPlace.timeToFinish = curTimeToFinish;
+            curPlace.timeToFinish = curTimeToFinish;
             finalPlaces.push(curPlace);
           }
         }
@@ -111,10 +105,11 @@ export function getTimeToFinish(endPoint, places, totalTripTime = 0) {
       }
     }
   );
-  return {
-    error: error,
-    places: finalPlaces,
-  };
+  // return {
+  //   error: error,
+  //   places: finalPlaces,
+  // };
+  return finalPlaces
 }
 
 //2. For each place from places calculate time to finishPoint from this place,
