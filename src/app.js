@@ -162,22 +162,21 @@ async function createMarker(place) {
 // finding trip duration and distance using distance matrix API
 document.getElementById("findTrips").addEventListener("click", function (e) {
   e.preventDefault();
-  let withTimeFromStart = getTimeFromStart(startPoint, points, totalTripTime);
 
-  // let withTimeFromStart = []
-  // await setTimeout(function() {
-  //   console.log('from setTimeOut', startPoint, points)
-  //   let newArr = getTimeFromStart(startPoint, points, totalTripTime)
-  //   withTimeFromStart = [...newArr]
-  // }, 5000)
-  console.log("places from time from start", withTimeFromStart, withTimeFromStart.length);
-  
-  let withTimeToFinish = getTimeToFinish(
-    endPoint,
-    withTimeFromStart,
-    totalTripTime
-  );
-  console.log("places to finish", withTimeToFinish);
+  let withTimeFromStart = getTimeFromStart(startPoint, points, totalTripTime);
+  setTimeout(function () {
+    console.log(
+      "places from time from start",
+      withTimeFromStart,
+      withTimeFromStart.length
+    );
+    let withTimeToFinish = getTimeToFinish(
+      endPoint,
+      withTimeFromStart,
+      totalTripTime
+    );
+    console.log("places to finish", withTimeToFinish);
+  }, 1000);
 });
 
 //time difference - total trip time
