@@ -1,34 +1,3 @@
-let points = [
-  {
-    index: 0,
-    minsToSpend: 220,
-  },
-  {
-    index: 1,
-    minsToSpend: 60,
-  },
-  {
-    index: 2,
-    minsToSpend: 350,
-  },
-  {
-    index: 3,
-    minsToSpend: 45,
-  },
-  {
-    index: 4,
-    minsToSpend: 90,
-  },
-  {
-    index: 5,
-    minsToSpend: 75,
-  },
-  {
-    index: 6,
-    minsToSpend: 40,
-  },
-];
-
 // let travelTimes = [
 //   [0, 10, 40, 30, 15, 34, 41],
 //   [10, 0, 33, 26, 23, 15, 10],
@@ -39,29 +8,28 @@ let points = [
 //   [41, 10, 20, 8, 9, 7, 0],
 // ];
 
-//temporary TravelTimes set for testing
-let travelTimes = [
-  [0, 10, 40],
-  [10, 0, 33],
-  [40, 33, 0]
-];
+// //temporary TravelTimes set for testing
+// let travelTimes = [
+//   [0, 10, 40],
+//   [10, 0, 33],
+//   [40, 33, 0]
+// ];
 
-// //   let travelTimes = new Array(7).fill([0])
+  const fillTravelTimes = (num) => {
+    let travelTimes = new Array(num).fill([0])
+    for (let i = 0; i < num; i++) {
+      for (let j = i + 1; j < num; j++) {
+        let travelTime = Math.round(Math.random() * 100);
+        travelTimes[i][j] = travelTime;
+        travelTimes[j][i] = travelTime;
+      }
+    }
+    return travelTimes
+  }
 
-// //   const fillTravelTimes = () => {
-// //     for (let i = 0; i < travelTimes.length; i++) {
-// //       for (let j = i + 1; j < travelTimes.length; j++) {
-// //         let travelTime = Math.round(Math.random() * 100);
-// //         travelTimes[i][j] = travelTime;
-// //         travelTimes[j][i] = travelTime;
-// //       }
-// //     }
-// //   }
-// //   ​
-// //   fillTravelTimes()
-// //   console.log(travelTimes)
 
 const createPossibleTrips = (points) => {
+
   const permutations = [];
 
   const permutate = (cur, rest) => {
@@ -79,20 +47,24 @@ const createPossibleTrips = (points) => {
   return permutations;
 };
 
-const getSets = (places, totalTripTime) => {
-  let newPoints = places.filter((point) => point.minsToSpend <= totalTripTime);
+export function getSets (places, totalTripTime) {
+  //let newPoints = places.filter((point) => point.minsToSpend <= totalTripTime);
 
   let finalSet = [];
-  let tripsOptions = createPossibleTrips(newPoints);
+
+  let travelTimes = fillTravelTimes(places.length)
+
+  let tripsOptions = createPossibleTrips(places);
+  console.log("trip options", tripsOptions)
 
   for (let i = 0; i < tripsOptions.length; i++) {
-    let time = tripsOptions[i][0].minsToSpend;
+    let time = tripsOptions[i][0].minsToSpend + tripsOptions[i][0].timeFromStart + tripsOptions[i][tripsOptions[i].length - 1].timeToFinish;
     let trip = tripsOptions[i];
-    for (let j = 1; j < newPoints.length; j++) {
+    for (let j = 1; j < places.length; j++) {
       time =
         time +
         travelTimes[trip[j - 1].index][trip[j].index] +
-        trip[j].minsToSpend;
+        trip[j].minsToSpend
       //if time greater than totalTripTime we need to cut rest of the points in this trip and break this loop
       if (time > totalTripTime) {
         trip = trip.slice(0, j);
@@ -118,7 +90,7 @@ const checkSet = (curSet, trip) => {
       let idx = 0;
       while (idx < trip.length) {
         if (
-          curSet[i][idx].index === trip[idx].index &&
+          curSet[i][idx].place_id === trip[idx].place_id &&
           curSet[i][idx].minsToSpend === trip[idx].minsToSpend
         )
           idx++;
@@ -135,5 +107,5 @@ const checkSet = (curSet, trip) => {
 
 // console.log(getSets(points, 200));
 
-module.exports = getSets;
+// module.exports = getSets;
 
