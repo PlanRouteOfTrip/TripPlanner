@@ -34,7 +34,9 @@ export function getTimeFromStart(startPoint, places, totalTripTime = 0) {
     },
     function (response, status) {
       if (status === "OK") {
+        console.log('from to start FUNCTION', response)
         let foundTimes = response.rows[0].elements;
+        console.log('from to start FUNCTION', foundTimes)
         for (let i = 0; i < places.length; i++) {
           let currentPlace = places[i];
           let currentTimeFromStart = Math.floor(
