@@ -112,6 +112,8 @@ export function getTimeToFinish(endPoint, places, totalTripTime = 0) {
   return finalPlaces
 }
 
+
+
 //2. For each place from places calculate time to finishPoint from this place,
 //add place.timeToFinish: time if (timeFromStart + timeToSpend + timeToFinish) < totalTripTime
 //else remove place from places
