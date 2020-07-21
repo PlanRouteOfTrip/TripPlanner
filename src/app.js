@@ -15,7 +15,9 @@ let totalTripTime;
 let endPoint;
 
 import { getTimeFromStart, getTimeToFinish } from "./calculate-trip";
+import { fillTravelTimes } from "./matrixMaker";
 import { getSets } from "./index-temp";
+
 
 window.initMap = function () {
   var newYork = new window.google.maps.LatLng(40.5941732, -73.9443477);
@@ -74,11 +76,11 @@ document
 
     // check if date of trip start is chosen
     startDay = document.getElementById("dateOfTripStart").value;
-    // console.log("this is start date", startDay);
+    console.log("this is start date", startDay);
 
     // check if time of trip start is chosen
     startTime = document.getElementById("startTime").value;
-    // console.log("this is start time", startTime);
+    console.log("this is start time", startTime);
   });
 
 // pressing of the button to add final point of the trip
@@ -92,14 +94,18 @@ document
 
     // check if date of trip end is chosen
     endDay = document.getElementById("dateOfTripEnd").value;
-    // console.log("this is end date", endDay);
+    console.log("this is end date", endDay);
 
     // check if time of trip end is chosen
     endTime = document.getElementById("endTime").value;
-    // console.log("this is end time", endTime);
+    console.log("this is end time", endTime);
 
     let dt1 = new Date(startDay + "T" + startTime);
     let dt2 = new Date(endDay + "T" + endTime);
+    let dayOfTheWeekStart = dt1.getDay();
+    console.log("Day of start!!!!", dayOfTheWeekStart);
+    let dayOfTheWeekEnd = dt2.getDay();
+    console.log("Day of end!!!!", dayOfTheWeekEnd);
     totalTripTime = diff_hours(dt2, dt1);
     console.log("this is total time in minutes", totalTripTime);
   });
@@ -165,7 +171,9 @@ document.getElementById("findTrips").addEventListener("click", function (e) {
   e.preventDefault();
 
   let withTimeFromStart = getTimeFromStart(startPoint, points, totalTripTime);
-  let withTimeToFinish = [];
+
+  let withTimeToFinish;
+  let matrix;
   setTimeout(function () {
     console.log(
       "places from time from start",
@@ -177,8 +185,15 @@ document.getElementById("findTrips").addEventListener("click", function (e) {
       withTimeFromStart,
       totalTripTime
     );
-    console.log("places to finish", withTimeToFinish);
   }, 1000);
+
+
+  setTimeout(function () {
+    console.log("places to finish", withTimeToFinish, withTimeToFinish.length);
+    matrix = fillTravelTimes(withTimeToFinish);
+    console.log("matrix of times", matrix);
+  }, 3000);
+
   setTimeout(function() {
     for (let i = 0; i < withTimeToFinish.length; i++) {
       withTimeToFinish[i].index = i;
@@ -187,6 +202,7 @@ document.getElementById("findTrips").addEventListener("click", function (e) {
   setTimeout(function() {
     console.log("!***!final set!***!", getSets(withTimeToFinish, totalTripTime));
   }, 3000)
+
 });
 
 //time difference - total trip time
