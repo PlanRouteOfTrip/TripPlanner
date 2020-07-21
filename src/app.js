@@ -16,6 +16,8 @@ let endPoint;
 
 import { getTimeFromStart, getTimeToFinish } from "./calculate-trip";
 import { fillTravelTimes } from "./matrixMaker";
+import { getSets } from "./index-temp";
+
 
 window.initMap = function () {
   var newYork = new window.google.maps.LatLng(40.5941732, -73.9443477);
@@ -169,9 +171,9 @@ document.getElementById("findTrips").addEventListener("click", function (e) {
   e.preventDefault();
 
   let withTimeFromStart = getTimeFromStart(startPoint, points, totalTripTime);
+
   let withTimeToFinish;
   let matrix;
-
   setTimeout(function () {
     console.log(
       "places from time from start",
@@ -185,11 +187,22 @@ document.getElementById("findTrips").addEventListener("click", function (e) {
     );
   }, 1000);
 
+
   setTimeout(function () {
     console.log("places to finish", withTimeToFinish, withTimeToFinish.length);
     matrix = fillTravelTimes(withTimeToFinish);
     console.log("matrix of times", matrix);
   }, 3000);
+
+  setTimeout(function() {
+    for (let i = 0; i < withTimeToFinish.length; i++) {
+      withTimeToFinish[i].index = i;
+    }
+  }, 2000)
+  setTimeout(function() {
+    console.log("!***!final set!***!", getSets(withTimeToFinish, totalTripTime));
+  }, 3000)
+
 });
 
 //time difference - total trip time
