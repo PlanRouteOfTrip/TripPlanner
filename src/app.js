@@ -17,7 +17,7 @@ let endPoint;
 import { getTimeFromStart, getTimeToFinish } from "./calculate-trip";
 import { fillTravelTimes } from "./matrixMaker";
 import { getSets } from "./index-temp";
-import { checkOpenHours } from "./openingHours";
+
 
 window.initMap = function () {
   var newYork = new window.google.maps.LatLng(40.5941732, -73.9443477);
@@ -169,8 +169,10 @@ document.getElementById("findTrips").addEventListener("click", function (e) {
   let withTimeFromStart = getTimeFromStart(startPoint, points, totalTripTime);
 
   let withTimeToFinish;
-  let matrix;
+
   let beforeCheckingHours;
+  let matrix = [];
+
 
   setTimeout(function () {
     console.log(
@@ -195,11 +197,12 @@ document.getElementById("findTrips").addEventListener("click", function (e) {
     for (let i = 0; i < withTimeToFinish.length; i++) {
       withTimeToFinish[i].index = i;
     }
-  }, 2000);
-  setTimeout(function () {
-    beforeCheckingHours = getSets(withTimeToFinish, totalTripTime);
-    console.log("!***!final set!***!", beforeCheckingHours);
-  }, 3000);
+  }, 2000)
+
+  setTimeout(function() {
+    console.log("!***!final set!***!", getSets(withTimeToFinish, totalTripTime));
+  }, 3000)
+
 
   let start = new Date(startDay + "T" + startTime);
   setTimeout(function() {
