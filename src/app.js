@@ -56,7 +56,7 @@ document
     }
 
     let newPoint = document.createElement("li");
-    newPoint.innerText = newPlace.name;
+    newPoint.innerText = `${newPlace.name} - ${minutes} min`;
     document.getElementById("listAllPlaces").appendChild(newPoint);
 
     document.getElementById("point").value = "";
@@ -180,7 +180,35 @@ document.getElementById("findTrips").addEventListener("click", function (e) {
 
   setTimeout(function() {
     let dt1 = new Date(startDay + "T" + startTime);
-    console.log("!***!final set!***!", getSets(withTimeToFinish, totalTripTime, dt1));
+    let bestTrips = getSets(withTimeToFinish, totalTripTime, dt1);
+    console.log("!***!final set!***!", bestTrips);
+
+    if (!bestTrips.length) {
+      let result = document.createElement("li")
+      result.innerText = "No possible trip options were found. Try to change trip settings."
+      document.getElementById("bestTripOptions").appendChild(result);
+    }
+    for (let i = 0; i < bestTrips.length; i++) {
+      let currentBest = document.createElement("li");
+      //create string with all the info about current trip option
+      let currentTripString = `
+      ***************
+      OPTION ${i + 1}:
+      Start from ${startPoint.name} by ${startTime} 
+
+      `
+      for (let j = 0; j < bestTrips[i].length; j++) {
+        currentTripString += `=> ${bestTrips[i][j].name} - ${bestTrips[i][j].minsToSpend} min 
+        
+        `
+      }
+      currentTripString += `
+      Finish at ${endPoint.name} by ${endTime} (expected ${startTime} + ${bestTrips[i][0].totalTripTime} mins)
+      ***************
+      `
+      currentBest.innerText = currentTripString;
+      document.getElementById("bestTripOptions").appendChild(currentBest);
+    }
   }, 3000)
 });
 
