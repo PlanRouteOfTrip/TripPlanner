@@ -173,7 +173,8 @@ document.getElementById("findTrips").addEventListener("click", function (e) {
   let withTimeFromStart = getTimeFromStart(startPoint, points, totalTripTime);
 
   let withTimeToFinish;
-  let matrix;
+  let matrix = [];
+
   setTimeout(function () {
     console.log(
       "places from time from start",
@@ -199,6 +200,7 @@ document.getElementById("findTrips").addEventListener("click", function (e) {
       withTimeToFinish[i].index = i;
     }
   }, 2000)
+
   setTimeout(function() {
     console.log("!***!final set!***!", getSets(withTimeToFinish, totalTripTime));
   }, 3000)
