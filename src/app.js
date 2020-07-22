@@ -14,10 +14,11 @@ let endTime;
 let totalTripTime;
 let endPoint;
 
+var group = [];
+
 import { getTimeFromStart, getTimeToFinish } from "./calculateWithStartFinish";
 
 import { getSets } from "./calculateTrips";
-
 
 window.initMap = function () {
   var newYork = new window.google.maps.LatLng(40.5941732, -73.9443477);
@@ -144,6 +145,15 @@ async function createMarker(place) {
       placeId: place.place_id,
     });
 
+    // auto-zooming according chosen markers
+    group.push(marker)
+    const bounds = new window.google.maps.LatLngBounds()
+    group.map(item => {
+      bounds.extend(item.position)
+      return item.id
+    })
+    map.fitBounds(bounds)
+
     window.google.maps.event.addListener(marker, "click", function () {
       infowindow.setContent(place.name);
       infowindow.open(map, this);
@@ -176,16 +186,17 @@ document.getElementById("findTrips").addEventListener("click", function (e) {
     for (let i = 0; i < withTimeToFinish.length; i++) {
       withTimeToFinish[i].index = i;
     }
-  }, 2000)
+  }, 2000);
 
-  setTimeout(function() {
+  setTimeout(function () {
     let dt1 = new Date(startDay + "T" + startTime);
     let bestTrips = getSets(withTimeToFinish, totalTripTime, dt1);
     console.log("!***!final set!***!", bestTrips);
 
     if (!bestTrips.length) {
-      let result = document.createElement("li")
-      result.innerText = "No possible trip options were found. Try to change trip settings."
+      let result = document.createElement("li");
+      result.innerText =
+        "No possible trip options were found. Try to change trip settings.";
       document.getElementById("bestTripOptions").appendChild(result);
     }
     for (let i = 0; i < bestTrips.length; i++) {
@@ -196,19 +207,19 @@ document.getElementById("findTrips").addEventListener("click", function (e) {
       OPTION ${i + 1}:
       Start from ${startPoint.name} by ${startTime} 
 
-      `
+      `;
       for (let j = 0; j < bestTrips[i].length; j++) {
         currentTripString += `=> ${bestTrips[i][j].name} - ${bestTrips[i][j].minsToSpend} min 
         
-        `
+        `;
       }
       currentTripString += `Finish at ${endPoint.name} by ${endTime} (expected ${startTime} + ${bestTrips[i][0].totalTripTime} mins)
       ***************
-      `
+      `;
       currentBest.innerText = currentTripString;
       document.getElementById("bestTripOptions").appendChild(currentBest);
     }
-  }, 3000)
+  }, 3000);
 });
 
 //time difference - total trip time
