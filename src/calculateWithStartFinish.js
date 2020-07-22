@@ -64,8 +64,6 @@ export function getTimeToFinish(endPoint, places, totalTripTime = 0) {
   let finalPlaces = [];
   let placesAdressesOnly = [];
 
-  console.log("places", places, places.length);
-
   if (!endPoint || !places || !places.length) {
     return {
       error: "Starting point/ending point or places to visit are not specified",
@@ -76,9 +74,6 @@ export function getTimeToFinish(endPoint, places, totalTripTime = 0) {
   for (let i = 0; i < places.length; i++) {
     placesAdressesOnly.push(places[i].address);
   }
-
-  console.log("adresses only", placesAdressesOnly);
-
   var service = new window.google.maps.DistanceMatrixService();
   service.getDistanceMatrix(
     {

@@ -14,9 +14,9 @@ let endTime;
 let totalTripTime;
 let endPoint;
 
-import { getTimeFromStart, getTimeToFinish } from "./calculate-trip";
-import { fillTravelTimes } from "./matrixMaker";
-import { getSets } from "./index-temp";
+import { getTimeFromStart, getTimeToFinish } from "./calculateWithStartFinish";
+
+import { getSets } from "./calculateTrips";
 
 
 window.initMap = function () {
@@ -36,13 +36,10 @@ document
   .getElementById("addPoint")
   .addEventListener("click", async function (e) {
     e.preventDefault();
-    console.log("points", points, points.length);
     let place = document.getElementById("point").value;
     let minutes = document.getElementById("timeInPlace").value;
 
     let newPlace = await getFoundPlace(place);
-    console.log("object of the place", newPlace);
-
     if (newPlace.opening_hours) {
       points.push({
         name: newPlace.name,
@@ -141,7 +138,6 @@ function getGoalPlace(placeId) {
 // mark place on a map
 async function createMarker(place) {
   try {
-    console.log("this is place", place);
     var marker = new window.google.maps.Marker({
       map: map,
       position: place.geometry.location,
@@ -154,7 +150,6 @@ async function createMarker(place) {
     });
 
     let goalPlace = await getGoalPlace(marker.placeId);
-    console.log("goal", goalPlace);
 
     return goalPlace;
   } catch (error) {
@@ -167,19 +162,9 @@ document.getElementById("findTrips").addEventListener("click", function (e) {
   e.preventDefault();
 
   let withTimeFromStart = getTimeFromStart(startPoint, points, totalTripTime);
-
   let withTimeToFinish;
 
-  let beforeCheckingHours;
-  let matrix = [];
-
-
   setTimeout(function () {
-    console.log(
-      "places from time from start",
-      withTimeFromStart,
-      withTimeFromStart.length
-    );
     withTimeToFinish = getTimeToFinish(
       endPoint,
       withTimeFromStart,
@@ -188,26 +173,15 @@ document.getElementById("findTrips").addEventListener("click", function (e) {
   }, 1000);
 
   setTimeout(function () {
-    console.log("places to finish", withTimeToFinish, withTimeToFinish.length);
-    matrix = fillTravelTimes(withTimeToFinish);
-    console.log("matrix of times", matrix);
-  }, 3000);
-
-  setTimeout(function () {
     for (let i = 0; i < withTimeToFinish.length; i++) {
       withTimeToFinish[i].index = i;
     }
   }, 2000)
 
   setTimeout(function() {
-    console.log("!***!final set!***!", getSets(withTimeToFinish, totalTripTime));
+    let dt1 = new Date(startDay + "T" + startTime);
+    console.log("!***!final set!***!", getSets(withTimeToFinish, totalTripTime, dt1));
   }, 3000)
-
-
-  let start = new Date(startDay + "T" + startTime);
-  setTimeout(function() {
-    console.log("!***!final set AFTER CHECKING HOURS !***!", checkOpenHours(beforeCheckingHours, start, matrix))
-  }, 4000)
 });
 
 //time difference - total trip time
