@@ -36,10 +36,10 @@ export function checkOpenHours(routes, start, matrix) {
         //   let arrivalMinutes = timer.getMinutes();
           // check if place is opened at the time of arriving to the point
           if (arrivalHours >= opening && arrivalHours < closing) {
-            timer = new Date(new Date(timer).getTime() + (point.minsToSpend* 60 * 1000));
+            timer = new Date(new Date(timer).getTime() + (point.minsToSpend * 60 * 1000));
             let leavingHours = timer.getHours();
             // check if the place is still opened at the time of leaving of the place
-            if (leavingHours > closing) break;
+            if (leavingHours >= closing) break;
           } else break
         } else {
           console.log(point.name, "closed on this day!!!");
