@@ -202,8 +202,7 @@ document.getElementById("findTrips").addEventListener("click", function (e) {
         
         `
       }
-      currentTripString += `
-      Finish at ${endPoint.name} by ${endTime} (expected ${startTime} + ${bestTrips[i][0].totalTripTime} mins)
+      currentTripString += `Finish at ${endPoint.name} by ${endTime} (expected ${startTime} + ${bestTrips[i][0].totalTripTime} mins)
       ***************
       `
       currentBest.innerText = currentTripString;
