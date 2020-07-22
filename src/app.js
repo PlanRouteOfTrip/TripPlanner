@@ -17,7 +17,7 @@ let endPoint;
 import { getTimeFromStart, getTimeToFinish } from "./calculate-trip";
 import { fillTravelTimes } from "./matrixMaker";
 import { getSets } from "./index-temp";
-
+import { checkOpenHours } from "./openingHours";
 
 window.initMap = function () {
   var newYork = new window.google.maps.LatLng(40.5941732, -73.9443477);
@@ -102,12 +102,8 @@ document
 
     let dt1 = new Date(startDay + "T" + startTime);
     let dt2 = new Date(endDay + "T" + endTime);
-    let dayOfTheWeekStart = dt1.getDay();
-    console.log("Day of start!!!!", dayOfTheWeekStart);
-    let dayOfTheWeekEnd = dt2.getDay();
-    console.log("Day of end!!!!", dayOfTheWeekEnd);
     totalTripTime = diff_hours(dt2, dt1);
-    console.log("this is total time in minutes", totalTripTime);
+    console.log("TOTAL TRIP TIME in MINS", totalTripTime);
   });
 
 function getFoundPlace(place) {
@@ -174,6 +170,8 @@ document.getElementById("findTrips").addEventListener("click", function (e) {
 
   let withTimeToFinish;
   let matrix;
+  let beforeCheckingHours;
+
   setTimeout(function () {
     console.log(
       "places from time from start",
@@ -187,22 +185,26 @@ document.getElementById("findTrips").addEventListener("click", function (e) {
     );
   }, 1000);
 
-
   setTimeout(function () {
     console.log("places to finish", withTimeToFinish, withTimeToFinish.length);
     matrix = fillTravelTimes(withTimeToFinish);
     console.log("matrix of times", matrix);
   }, 3000);
 
-  setTimeout(function() {
+  setTimeout(function () {
     for (let i = 0; i < withTimeToFinish.length; i++) {
       withTimeToFinish[i].index = i;
     }
-  }, 2000)
-  setTimeout(function() {
-    console.log("!***!final set!***!", getSets(withTimeToFinish, totalTripTime));
-  }, 3000)
+  }, 2000);
+  setTimeout(function () {
+    beforeCheckingHours = getSets(withTimeToFinish, totalTripTime);
+    console.log("!***!final set!***!", beforeCheckingHours);
+  }, 3000);
 
+  let start = new Date(startDay + "T" + startTime);
+  setTimeout(function() {
+    console.log("!***!final set AFTER CHECKING HOURS !***!", checkOpenHours(beforeCheckingHours, start, matrix))
+  }, 4000)
 });
 
 //time difference - total trip time
