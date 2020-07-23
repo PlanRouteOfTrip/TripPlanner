@@ -2,5 +2,10 @@ secret.js
 
 node_modules
 
-dist
+dist/main.js
+dist/main.js.map
+
+.DS_Store
+
+.vscode
 
