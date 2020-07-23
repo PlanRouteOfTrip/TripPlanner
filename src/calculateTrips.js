@@ -24,9 +24,7 @@ export function getSets(places, totalTripTime, start) {
   let finalSet = [];
   let bestSet = [];
   let matrix = fillTravelTimes(places)
-
   let tripsOptions = createPossibleTrips(places);
-  console.log("trip options", tripsOptions);
 
   for (let i = 0; i < tripsOptions.length; i++) {
     let time =
