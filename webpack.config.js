@@ -6,7 +6,7 @@ module.exports = {
   output: {
     path: __dirname,
     publicPath: "/",
-    filename: "./dist/main.js",
+    filename: "./public/main.js",
   },
   devtool: "source-map",
   module: {
