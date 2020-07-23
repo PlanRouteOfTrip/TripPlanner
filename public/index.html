@@ -3,13 +3,7 @@
   <head>
     <title>Simple Map</title>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
-    <script
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAUhHqehZorrscHAoze1dmsDOpexDOncUk&callback=initMap&libraries=&v=weekly&libraries=places"
-      async
-      defer
-    ></script>
-    <link rel="stylesheet" type="text/css" href="./style.css" />
-    <script src="./bundle.js" defer></script>
+    <link rel="stylesheet" type="text/css" href="../style.css" />
   </head>
   <body>
     <div class="container">
@@ -30,7 +24,7 @@
           <button type="submit" id="addStart">Set Start</button>
         </form>
         <form class="finish">
-          <h3>2. Final Destination:</h3>
+          <h3>2. Final Destination: </h3>
           <input
             type="text"
             id="finishLocation"
@@ -65,7 +59,16 @@
         <button type="button" id="findTrips">
           4. Find best options of the trip
         </button>
+        <div>
+          <h2>Best trip options:</h2>
+          <ul id="bestTripOptions"></ul>
+        </div>
       </div>
     </div>
+    <script
+      defer
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAUhHqehZorrscHAoze1dmsDOpexDOncUk&callback=initMap&libraries=&v=weekly&libraries=places"
+  ></script>
+    <script src="./main.js"></script>
   </body>
 </html>
