@@ -168,58 +168,57 @@ async function createMarker(place) {
 }
 
 // finding trip duration and distance using distance matrix API
-document.getElementById("findTrips").addEventListener("click", function (e) {
+document.getElementById("findTrips").addEventListener("click", async function (e) {
   e.preventDefault();
-
-  let withTimeFromStart = getTimeFromStart(startPoint, points, totalTripTime);
-  let withTimeToFinish;
-
-  setTimeout(function () {
-    withTimeToFinish = getTimeToFinish(
+  console.log("before calling withTimeFromStart after click")
+  let withTimeFromStart = await getTimeFromStart(startPoint, points, totalTripTime);
+  console.log("after calling withTimeFromStart after click")
+  console.log('withTimeFromStart.length', withTimeFromStart.length)
+  let withTimeToFinish = getTimeToFinish(
       endPoint,
       withTimeFromStart,
       totalTripTime
-    );
-  }, 1000);
+  )
+  console.log('withTimeToFinish.length', withTimeToFinish.length)
 
-  setTimeout(function () {
-    for (let i = 0; i < withTimeToFinish.length; i++) {
-      withTimeToFinish[i].index = i;
-    }
-  }, 2000);
+  // setTimeout(function () {
+  //   for (let i = 0; i < withTimeToFinish.length; i++) {
+  //     withTimeToFinish[i].index = i;
+  //   }
+  // }, 2000);
 
-  setTimeout(function () {
-    let dt1 = new Date(startDay + "T" + startTime);
-    let bestTrips = getSets(withTimeToFinish, totalTripTime, dt1);
-    console.log("!***!final set!***!", bestTrips);
+  // setTimeout(function () {
+  //   let dt1 = new Date(startDay + "T" + startTime);
+  //   let bestTrips = getSets(withTimeToFinish, totalTripTime, dt1);
+  //   console.log("!***!final set!***!", bestTrips);
 
-    if (!bestTrips.length) {
-      let result = document.createElement("li");
-      result.innerText =
-        "No possible trip options were found. Try to change trip settings.";
-      document.getElementById("bestTripOptions").appendChild(result);
-    }
-    for (let i = 0; i < bestTrips.length; i++) {
-      let currentBest = document.createElement("li");
-      //create string with all the info about current trip option
-      let currentTripString = `
-      ***************
-      OPTION ${i + 1}:
-      Start from ${startPoint.name} by ${startTime} 
+  //   if (!bestTrips.length) {
+  //     let result = document.createElement("li");
+  //     result.innerText =
+  //       "No possible trip options were found. Try to change trip settings.";
+  //     document.getElementById("bestTripOptions").appendChild(result);
+  //   }
+  //   for (let i = 0; i < bestTrips.length; i++) {
+  //     let currentBest = document.createElement("li");
+  //     //create string with all the info about current trip option
+  //     let currentTripString = `
+  //     ***************
+  //     OPTION ${i + 1}:
+  //     Start from ${startPoint.name} by ${startTime} 
 
-      `;
-      for (let j = 0; j < bestTrips[i].length; j++) {
-        currentTripString += `=> ${bestTrips[i][j].name} - ${bestTrips[i][j].minsToSpend} min 
+  //     `;
+  //     for (let j = 0; j < bestTrips[i].length; j++) {
+  //       currentTripString += `=> ${bestTrips[i][j].name} - ${bestTrips[i][j].minsToSpend} min 
         
-        `;
-      }
-      currentTripString += `Finish at ${endPoint.name} by ${endTime} (expected ${startTime} + ${bestTrips[i][0].totalTripTime} mins)
-      ***************
-      `;
-      currentBest.innerText = currentTripString;
-      document.getElementById("bestTripOptions").appendChild(currentBest);
-    }
-  }, 3000);
+  //       `;
+  //     }
+  //     currentTripString += `Finish at ${endPoint.name} by ${endTime} (expected ${startTime} + ${bestTrips[i][0].totalTripTime} mins)
+  //     ***************
+  //     `;
+  //     currentBest.innerText = currentTripString;
+  //     document.getElementById("bestTripOptions").appendChild(currentBest);
+  //   }
+  // }, 3000);
 });
 
 //time difference - total trip time

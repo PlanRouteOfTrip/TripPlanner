@@ -10,31 +10,30 @@
 
 //For each place in places get travel time from point to this place
 
-export function getTimeFromStart(startPoint, places, totalTripTime = 0) {
-  let error = "";
-  let newPlaces = [];
-  let placesAdressesOnly = [];
+function getTimeFromStartFromAPI(startPoint, places, totalTripTime) {
+  console.log("first line from getTimeFromStartFromAPI")
+  
+  let placesAddressesOnly = []
 
-  if (!startPoint || !places || !places.length) {
-    return {
-      error: "Starting point or places to visit are not specified",
-      newPlaces: [],
-    };
-  }
-  //TBD: change name to address!!!!
+  console.log("before calculating addresses only")
   for (let i = 0; i < places.length; i++) {
-    placesAdressesOnly.push(places[i].address);
+    placesAddressesOnly.push(places[i].address);
   }
-  var service = new window.google.maps.DistanceMatrixService();
-  service.getDistanceMatrix(
-    {
-      origins: [startPoint.formatted_address],
-      destinations: placesAdressesOnly,
-      travelMode: "DRIVING",
-    },
-    function (response, status) {
+  console.log("after calculating addresses only")
+  
+  let request = {
+    origins: [startPoint.formatted_address],
+    destinations: placesAddressesOnly,
+    travelMode: "DRIVING",
+  }
+  return new Promise((resolve, reject) => {
+    var service = new window.google.maps.DistanceMatrixService();
+    service.getDistanceMatrix(request, (response, status) => {
+      console.log("status", status)
       if (status === "OK") {
+        let newPlaces = []
         let foundTimes = response.rows[0].elements;
+        console.log('foundTimes', foundTimes)
         for (let i = 0; i < places.length; i++) {
           let currentPlace = places[i];
           let currentTimeFromStart = Math.floor(
@@ -43,17 +42,30 @@ export function getTimeFromStart(startPoint, places, totalTripTime = 0) {
           if (currentPlace.minsToSpend + currentTimeFromStart < totalTripTime) {
             currentPlace.timeFromStart = currentTimeFromStart;
             newPlaces.push(currentPlace);
+            console.log("newPlaces after push currentPlace", newPlaces)
           }
+        resolve(newPlaces)
         }
-      } else {
-        error = "Unable to get travel time from matrix api";
       }
-    }
-  );
-  // return {
-  //   error: error,
-  //   places: newPlaces,
-  // };
+    })
+  })
+}
+
+export async function getTimeFromStart(startPoint, places, totalTripTime = 0) {
+  console.log("first line of getTimeFromStart")
+  let placesAdressesOnly = [];
+
+  if (!startPoint || !places || !places.length) {
+    return {
+      error: "Starting point or places to visit are not specified",
+      newPlaces: [],
+    };
+  }
+
+  console.log("before awaiting get time from start from api")
+  let newPlaces = await getTimeFromStartFromAPI(startPoint, places, totalTripTime)
+  console.log("after awaiting get time from start from api")
+
   return newPlaces
 }
 

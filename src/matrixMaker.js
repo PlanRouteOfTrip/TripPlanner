@@ -1,6 +1,7 @@
 export function fillTravelTimes(places) {
   let error = "";
   let travelTimes = []
+  
   for (let i = 0; i < places.length; i++) {
       travelTimes.push(new Array(places.length).fill(0))
   }
