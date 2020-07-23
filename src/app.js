@@ -146,13 +146,13 @@ async function createMarker(place) {
     });
 
     // auto-zooming according chosen markers
-    group.push(marker)
-    const bounds = new window.google.maps.LatLngBounds()
-    group.map(item => {
-      bounds.extend(item.position)
-      return item.id
-    })
-    map.fitBounds(bounds)
+    group.push(marker);
+    const bounds = new window.google.maps.LatLngBounds();
+    group.map((item) => {
+      bounds.extend(item.position);
+      return item.id;
+    });
+    map.fitBounds(bounds);
 
     window.google.maps.event.addListener(marker, "click", function () {
       infowindow.setContent(place.name);
@@ -168,58 +168,57 @@ async function createMarker(place) {
 }
 
 // finding trip duration and distance using distance matrix API
-document.getElementById("findTrips").addEventListener("click", async function (e) {
-  e.preventDefault();
-  console.log("before calling withTimeFromStart after click")
-  let withTimeFromStart = await getTimeFromStart(startPoint, points, totalTripTime);
-  console.log("after calling withTimeFromStart after click")
-  console.log('withTimeFromStart.length', withTimeFromStart.length)
-  let withTimeToFinish = getTimeToFinish(
+document
+  .getElementById("findTrips")
+  .addEventListener("click", async function (e) {
+    e.preventDefault();
+    let withTimeFromStart = await getTimeFromStart(
+      startPoint,
+      points,
+      totalTripTime
+    );
+
+    let withTimeToFinish = await getTimeToFinish(
       endPoint,
       withTimeFromStart,
       totalTripTime
-  )
-  console.log('withTimeToFinish.length', withTimeToFinish.length)
+    );
 
-  // setTimeout(function () {
-  //   for (let i = 0; i < withTimeToFinish.length; i++) {
-  //     withTimeToFinish[i].index = i;
-  //   }
-  // }, 2000);
+    for (let i = 0; i < withTimeToFinish.length; i++) {
+      withTimeToFinish[i].index = i;
+    }
 
-  // setTimeout(function () {
-  //   let dt1 = new Date(startDay + "T" + startTime);
-  //   let bestTrips = getSets(withTimeToFinish, totalTripTime, dt1);
-  //   console.log("!***!final set!***!", bestTrips);
+    let dt1 = new Date(startDay + "T" + startTime);
+    let bestTrips = getSets(withTimeToFinish, totalTripTime, dt1);
+    console.log("!***!final set!***!", bestTrips);
 
-  //   if (!bestTrips.length) {
-  //     let result = document.createElement("li");
-  //     result.innerText =
-  //       "No possible trip options were found. Try to change trip settings.";
-  //     document.getElementById("bestTripOptions").appendChild(result);
-  //   }
-  //   for (let i = 0; i < bestTrips.length; i++) {
-  //     let currentBest = document.createElement("li");
-  //     //create string with all the info about current trip option
-  //     let currentTripString = `
-  //     ***************
-  //     OPTION ${i + 1}:
-  //     Start from ${startPoint.name} by ${startTime} 
+    if (!bestTrips.length) {
+      let result = document.createElement("li");
+      result.innerText =
+        "No possible trip options were found. Try to change trip settings.";
+      document.getElementById("bestTripOptions").appendChild(result);
+    }
+    for (let i = 0; i < bestTrips.length; i++) {
+      let currentBest = document.createElement("li");
+      //create string with all the info about current trip option
+      let currentTripString = `
+        ***************
+        OPTION ${i + 1}:
+        Start from ${startPoint.name} by ${startTime}
 
-  //     `;
-  //     for (let j = 0; j < bestTrips[i].length; j++) {
-  //       currentTripString += `=> ${bestTrips[i][j].name} - ${bestTrips[i][j].minsToSpend} min 
-        
-  //       `;
-  //     }
-  //     currentTripString += `Finish at ${endPoint.name} by ${endTime} (expected ${startTime} + ${bestTrips[i][0].totalTripTime} mins)
-  //     ***************
-  //     `;
-  //     currentBest.innerText = currentTripString;
-  //     document.getElementById("bestTripOptions").appendChild(currentBest);
-  //   }
-  // }, 3000);
-});
+        `;
+      for (let j = 0; j < bestTrips[i].length; j++) {
+        currentTripString += `=> ${bestTrips[i][j].name} - ${bestTrips[i][j].minsToSpend} min
+
+          `;
+      }
+      currentTripString += `Finish at ${endPoint.name} by ${endTime} (expected ${startTime} + ${bestTrips[i][0].totalTripTime} mins)
+        ***************
+        `;
+      currentBest.innerText = currentTripString;
+      document.getElementById("bestTripOptions").appendChild(currentBest);
+    }
+  });
 
 //time difference - total trip time
 function diff_hours(dt2, dt1) {
