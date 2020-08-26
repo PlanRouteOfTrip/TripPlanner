@@ -24,6 +24,8 @@ export function getSets(places, totalTripTime, start) {
   let finalSet = [];
   let bestSet = [];
   let matrix = fillTravelTimes(places)
+  console.log('matrix', matrix)
+  // console.log('element in matrix', matrix[0][1])
   let tripsOptions = createPossibleTrips(places);
 
   for (let i = 0; i < tripsOptions.length; i++) {
@@ -33,6 +35,7 @@ export function getSets(places, totalTripTime, start) {
       tripsOptions[i][tripsOptions[i].length - 1].timeToFinish;
     let trip = tripsOptions[i];
     for (let j = 1; j < places.length; j++) {
+      console.log('element in matrix',matrix[0][1])
       time =
         time +
         matrix[trip[j - 1].index][trip[j].index] +
