@@ -8,11 +8,7 @@
     "test": "jest",
     "start": "webpack-dev-server",
     "predeploy": "npm run build",
-<<<<<<< HEAD
-    "deploy": "gh-pages -d public",
-=======
     "deploy": "gh-pages -d dist",
->>>>>>> e78b73c48f9b96ca5d1f19c368d18dc5f63bcb45
     "build": "webpack --config webpack.config.js"
   },
   "author": "",
